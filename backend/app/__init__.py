@@ -1,0 +1,1 @@
+"""spraply FastAPI app package."""

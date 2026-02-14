@@ -1,0 +1,36 @@
+# Ignore Python virtual environment directories
+venv/
+ENV/
+env/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore distribution and packaging files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore operating system files
+.DS_Store
+Thumbs.db
+
+# Ignore .env files
+*.env
+!docker/db.env
+!docker/minio.env
+!docker/playwright.env
+.scrapy/*
+.celery/*
+celerybeat-schedule.db
+VERSION
+
+# Docker volumes
+docker/volumes/
