@@ -97,7 +97,12 @@ x-app: &app
     - SENTRY_DEBUG=${SENTRY_DEBUG:-False}
 
 x-frontend: &frontend
-  image: Spraply/frontend:${VERSION:-v0.12.1}
+  image: spraply-frontend:${VERSION:-dev}
+  build:
+    context: ../frontend/
+    dockerfile: Dockerfile
+    args:
+      VITE_APP_VERSION: ${VERSION:-dev}
   environment:
     - VITE_API_BASE_URL=${API_BASE_URL:-}
     - VITE_SENTRY_DSN=${SENTRY_FRONTEND_DSN:-}
@@ -116,12 +121,10 @@ services:
     ports:
       - "${NGINX_PORT:-80}:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf.template
-      - ./nginx/entrypoint.sh:/entrypoint.sh
+      - ./nginx/nginx.conf:/etc/nginx/templates/default.conf.template
     environment:
       - MINIO_PRIVATE_BUCKET=${MINIO_PRIVATE_BUCKET:-private}
       - MINIO_PUBLIC_BUCKET=${MINIO_PUBLIC_BUCKET:-public}
-    command: [ "/bin/sh", "/entrypoint.sh" ]
     depends_on:
       - app
       - frontend
@@ -134,7 +137,7 @@ services:
 
   frontend:
     <<: *frontend
-    command: [ "npm", "run", "serve" ]
+    # Uses the nginx-based image built by ../frontend/Dockerfile.
 
   minio:
     image: minio/minio:RELEASE.2024-11-07T00-52-20Z
@@ -149,6 +152,7 @@ services:
       - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY:-minio123}
 
   playwright:
+    profiles: ["extras"]
     image: Spraply/playwright:1.1
     restart: always
     user: root
@@ -173,6 +177,7 @@ services:
       retries: 5
 
   mcp:
+    profiles: ["extras"]
     image: Spraply/mcp:v1.2.0
     restart: always
     command: [ "sse", "--base-url", "http://app:9000", '--port', '3000', '--endpoint', '/sse' ]

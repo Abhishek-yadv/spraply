@@ -9,6 +9,18 @@ This guide explains how to run Spraply with the FastAPI backend locally.
 - pnpm
 - Docker + Docker Compose
 
+## Windows notes (important)
+
+If you're on Windows and run Linux containers with Docker Desktop, make sure shell scripts in this repo use LF line endings. Otherwise containers can fail with errors like `no such file or directory` when executing entrypoints.
+
+After pulling the latest changes (which include a `.gitattributes`), run once:
+
+```bash
+git add --renormalize .
+```
+
+Then commit the normalization (or stash/discard if you're not committing) and re-run your Docker commands.
+
 ## Quick Setup
 
 ```bash

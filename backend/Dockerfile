@@ -14,6 +14,7 @@ COPY docker-entrypoint.sh ./docker-entrypoint.sh
 
 RUN pip install --upgrade pip && \
     pip install . && \
+    sed -i 's/\r$//' /app/docker-entrypoint.sh && \
     chmod +x /app/docker-entrypoint.sh
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
